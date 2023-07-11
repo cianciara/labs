@@ -1,4 +1,4 @@
-- hosts: all
+- hosts: labsamba
   become: true
   tasks:
     - name: Install aptitude
@@ -16,12 +16,12 @@
         state: latest
         update_cache: true
 
-- hosts: all
+- hosts: labsamba
   become: true
   tasks:
-    - name: Edit /etc/hosts file
+    - name: Add IP address of all hosts to all hosts
       lineinfile:
-        path: /etc/hosts
-        line: "{{ hostvars[item].ansible_host }} {{ hostvars[item].inventory_hostname }}"
+        dest: /etc/hosts
+        line: "{{ hostvars[item].ansible_host }} {{ hostvars[item].inventory_hostname }} {{ hostvars[item].inventory_hostname_short }}"
         state: present
-      loop: "{{ ansible_play_hosts_all }}"
+      with_items: "{{ groups.all }}"
