@@ -36,12 +36,12 @@
         group: vagrant
         mode: '0600'
 
-- hosts: samba:nfs
-  become: true
+- hosts: all
   tasks:
     - name: Edit /etc/hosts file
       lineinfile:
         path: /etc/hosts
-        line: "{{ ansible_host }} {{ inventory_hostname }}"
+        line: "{{ hostvars[item].ansible_ip }} {{ hostvars[item].inventory_hostname }}"
         state: present
+      loop: "{{ ansible_play_hosts_all }}"
 
