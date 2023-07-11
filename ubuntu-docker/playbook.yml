@@ -58,8 +58,7 @@
         groups: docker
         append: yes
 
-- name: copy files to destination
-  hosts: all
+- hosts: all
   connection: local
   tasks:
     - name: copy id_rsa as id_rsa 
@@ -69,8 +68,7 @@
       tags:
         - simple_copy
 
-- name: Change file ownership, group, and permissions
-  hosts: all
+- hosts: all
   tasks:
     - name: Change file ownership, group, and permissions
       ansible.builtin.file:

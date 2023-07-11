@@ -1,0 +1,38 @@
+---
+- hosts: all
+  become: true
+  tasks:
+    - name: Install aptitude
+      apt:
+        name: aptitude
+        state: latest
+        update_cache: true
+
+    - name: Update apt and install samba, smbclient and winbind
+      apt:
+        pkg:
+          - samba
+          - smbclient
+          - winbind
+        state: latest
+        update_cache: true
+
+- hosts: all
+  connection: local
+  tasks:
+    - name: copy id_rsa as id_rsa 
+      copy:
+        src: .ssh/id_rsa
+        dest: /home/vagrant/.ssh/id_rsa
+      tags:
+        - simple_copy
+
+- hosts: all
+  tasks:
+    - name: Change file ownership, group, and permissions
+      ansible.builtin.file:
+        path: /home/vagrant/.ssh/id_rsa
+        owner: vagrant
+        group: vagrant
+        mode: '0600'
+
