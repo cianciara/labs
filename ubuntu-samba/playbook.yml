@@ -37,11 +37,25 @@
         mode: '0600'
 
 - hosts: all
+  become: true
+  connection: local
+  tasks:
+    - name: copy ansible hosts.ini file
+      copy:
+        src: hosts.ini
+        dest: /etc/ansible/hosts.ini
+      tags:
+        - simple_copy
+      update_cache: true
+
+
+- hosts: all
+  become: true
   tasks:
     - name: Edit /etc/hosts file
       lineinfile:
         path: /etc/hosts
-        line: "{{ hostvars[item].ansible_ip }} {{ hostvars[item].inventory_hostname }}"
+        line: "{{ hostvars[item].ansible_default_ipv4.address }} {{ hostvars[item].inventory_hostname }}"
         state: present
       loop: "{{ ansible_play_hosts_all }}"
 
