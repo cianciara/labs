@@ -36,3 +36,12 @@
         group: vagrant
         mode: '0600'
 
+- hosts: samba:nfs
+  become: true
+  tasks:
+    - name: Edit /etc/hosts file
+      lineinfile:
+        path: /etc/hosts
+        line: "{{ ansible_host }} {{ inventory_hostname }}"
+        state: present
+
