@@ -1,0 +1,27 @@
+- hosts: labsamba
+  become: true
+  tasks:
+    - name: Install aptitude
+      apt:
+        name: aptitude
+        state: latest
+        update_cache: true
+
+    - name: Update apt and install samba, smbclient, and winbind
+      apt:
+        pkg:
+          - samba
+          - smbclient
+          - winbind
+        state: latest
+        update_cache: true
+
+- hosts: labsamba
+  become: true
+  tasks:
+    - name: Add IP address of all hosts to all hosts
+      lineinfile:
+        dest: /etc/hosts
+        line: "{{ hostvars[item].ansible_host }} {{ hostvars[item].inventory_hostname }} {{ hostvars[item].inventory_hostname_short }}"
+        state: present
+      with_items: "{{ groups.labsamba }}"
