@@ -1,0 +1,37 @@
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
+# ENV['VAGRANT_DEFAULT_PROVIDER'] = 'libvirt'
+
+Vagrant.configure('2') do |config|
+# general config for all machines
+
+  config.vm.box = 'generic/rhel9'
+  config.vm.box_check_update = false
+  config.vm.provision "ansible" do |ansible|
+    ansible.playbook = "playbook.yml"
+    ansible.compatibility_mode = "2.0"
+  end
+
+  config.vm.provider 'virtualbox' do |vb|
+    vb.memory = 2048
+    vb.cpus = 2
+  end
+
+# configure all needed vms:
+
+  config.vm.define "rhel1" do |rhel1|
+    rhel1.vm.hostname = "rhel1"
+    rhel1.vm.network 'private_network', ip: '192.168.58.102'
+  end
+
+  config.vm.define "rhel2" do |rhel2|
+    rhel2.vm.hostname = "rhel2"
+    rhel2.vm.network 'private_network', ip: '192.168.58.101'
+    rhel2.vm.network 'private_network', ip: '192.168.57.101'
+  end
+
+  config.vm.define "rhel3" do |rhel3|
+    rhel3.vm.hostname = "rhel3"
+    rhel3.vm.network 'private_network', ip: '192.168.57.102'
+  end
+end

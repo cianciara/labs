@@ -1,0 +1,10 @@
+---
+- name: Update RHEL
+  hosts: all
+  become: yes
+
+  tasks:
+    - name: Ensure the system is updated
+      yum:
+        name: '*' 
+        state: latest
